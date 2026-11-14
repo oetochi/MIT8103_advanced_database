@@ -123,7 +123,7 @@ Targeted composite and covering indexes were designed based on query selectivity
 
    * `sql/15_bulk_payment_delivery.sql`
 
-3. Run `sql/16_business_queries.sql` prefixed with `EXPLAIN ANALYZE` to capture baseline plans and timings before indexing.
+3. Run `16_business_queries.sql` prefixed with `EXPLAIN ANALYZE` to capture baseline plans and timings before indexing.
 
 
 ## 9. Challenges and lessons
