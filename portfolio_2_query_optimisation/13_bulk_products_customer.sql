@@ -29,3 +29,15 @@ SELECT CONCAT('Bulk Customer', n),
         CONCAT('bulk', n, '@topez.sample'),
         CONCAT('080', LPAD(n, 8, '0'))
 FROM seq;
+
+# Used a default address for bulk customers
+INSERT INTO addresses (customer_id, street, landmark, city, state, is_default)
+SELECT customer_id,
+        CONCAT(customer_id, ' Factory Road'),
+        'By IBM juction',
+        ELT(1 + customer_id % 4, 'Port Harcourt', 'Yenegoa', 'Asaba', 'Benin'),
+        ELT(1 + customer_id % 4, 'Rivers', 'Bayelsa', 'Delta', 'Edo'),
+        TRUE
+FROM customers
+WHERE email LIKE 'bulk%@topez.sample';
+
