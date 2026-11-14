@@ -27,3 +27,24 @@ SELECT customer_id, address_id,
         ELT(1 + N % 5, 'PENDING', 'CONFIRMED', 'PARTIALLY_DELIVERED', 'DELIVERED', 'CANCELLED')
 FROM src;
 
+# Add 1-3 items/order, picking different products
+INSERT INTO order_items (order_id, product_id, quantity, unit_price)
+WITH RECURSIVE k AS (
+    SELECT 0 AS j UNION ALL SELECT j + 1
+    FROM k WHERE j < 2
+),
+plist AS (
+    SELECT product_id, price,
+            ROW_NUMBER() OVER (ORDER BY product_id) - 1 AS idx,
+            COUNT(*) OVER () AS total
+    FROM products
+)
+SELECT o.order_id, p.product_id, 1 + (o.order_id % 5), p.price
+FROM orders o
+JOIN k  ON k.j < 1 + (o.order_id % 3)
+JOIN plist p ON p.idx = (o.order_id * 7 + k.j * 11) % p.total
+WHERE NOT EXISTS (SELECT 1 FROM order_items x WHERE x.order_id = o.order_id);
+
+
+
+
