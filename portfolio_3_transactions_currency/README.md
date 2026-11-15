@@ -28,7 +28,7 @@ Run1: The statements I used.
 |6|	S2|	UPDATE products SET stock_qty = 10 - 6 WHERE sku='TXN-TEST-1'; (this will hang; S1 holds the row lock)|
 |7|	S1|	COMMIT; (S2’s update now goes through)|
 |8|	S2|	COMMIT;|
-|9|	either	SELECT stock_qty FROM products WHERE sku='TXN-TEST-1';|
+|9|	|either	SELECT stock_qty FROM products WHERE sku='TXN-TEST-1';|
 
 The `Run 1` shows a problem - lost update, depicting typical careless app behavious which is to read stock, calculate the new value by itself and then writes it back. By the end of step 9, stock count is at 4 but 12 bags were sold from a total balance of 10. The main reason is because `S2` didn't see `S1's` change largely because it calculated from it's stale read of 10 (gotten from step 4 statement above). This behavious is the `lost update` anomaly. `"The lost update problem is a concurrency issue that arises when multiple processes or threads concurrently access and modify the same data, resulting in some updates unintentionally overwriting others. This problem is significant in any system where concurrent modifications are possible, such as collaborative applications, financial systems, or any scenario involving shared resources." (source: https://www.baeldung.com/cs/concurrency-control-lost-update-problem)`
 
