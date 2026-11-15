@@ -61,4 +61,7 @@ It was also useful in generating the script behind the large sample datasets use
 Although Topez Farms connects smallholder farmers to indivisual/industrial buyers, this database design is limited to the sales side only. At the moment, nothing stops over-delivery of orders, but this will be addressed in portfolio 3 (check it out [here](url)).
 
 ### Challenges
-In the process of building this portfolio, I hit brick walls with typos in CHECK, ENUM mismatches, hardcoded IDs vs AUTO-INCREMENT). These were subsequently resolved after painstaking review of the scripts.
+In the process of building this portfolio, I hit brick walls with typos in CHECK, ENUM mismatches, hardcoded IDs vs AUTO-INCREMENT. These were subsequently resolved after painstaking review of the scripts.
+
+### Portfolio Limitation
+No script in portfolio 1 stops a buyer from receiving more than they ordered.
