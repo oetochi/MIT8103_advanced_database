@@ -1,4 +1,4 @@
-# Portfolio_3_transactions_currency
+# Portfolio 3 Transactions Currency
 
 The important lesson here is that the failed UPDATE only cancels itself. The earlier INSERTs stay pending until I issued ROLLBACK. Without it, I would have had a order with a corresponding in stock further buttressing the atomicity behaviour of the database.
 
