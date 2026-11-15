@@ -47,3 +47,52 @@ In Run 2, I gave the control mechanism that guarantees distributed truth. In the
 |7	|S2	|S2's SELECT shows 4, which is correct. S2 can see that 6 bags aren’t available. Run ROLLBACK;|
 | |
 
+
+
+#### Part D: Isolation levels
+Just like part C work, this one here also uses two terminals to run the `sql` sripts.
+
+In this session, my goal is to demo three isolation levels: `READ UNCOMMITTED`, `READ COMMITETED` and `REPEATABLE READ`
+
+Advice: first run `05_part_d.sql` before switching to your Terminal (2 windows) to complete the demos below.
+
+`D1: Dirty Commit`
+
+|Step	|Window	|Statement|
+|-------|-------|---------|
+|1	|S2	|SET SESSION TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;|
+|2	|S2	|START TRANSACTION;|
+|3	|S1	|START TRANSACTION;|
+|4	|S1	|UPDATE products SET stock_qty = 3 WHERE sku='TXN-TEST-1'; #(don't commit yet)|
+|5	|S2	|SELECT stock_qty FROM products WHERE sku='TXN-TEST-1'; #shows 3 (ref. `d1` screenshot), a value that was never committed|
+|6	|S1	|ROLLBACK;|
+|7	|S2	|Repeat the SELECT. It’s back to 10, so S2 acted on data that never officially existed. Then COMMIT;|
+| |
+
+Danger of `dirty read` for Topez Farms is that a buyer might see that stock exists whereas it is not because it was never actually committed.
+
+
+`D2: non-repeatable read`
+
+|Step	|Window	|Statement|
+|-------|-------|---------|
+|1	|S2	|`SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED;`|
+|2	|S2	|`START TRANSACTION;` then `SELECT stock_qty ...;` (10)|
+|3	|S1	|`UPDATE products SET stock_qty = 7 WHERE sku='TXN-TEST-1';` (autocommit commits it)|
+|4	|S2	|Repeat the `SELECT:...;` Noticed how the same query in the same transaction gave a different answer - '7'? Then COMMIT;
+
+For Topez Farms, the problem with non-repeatable read is that it'll lead to data inconsistency, for example, in checkout flow.
+
+
+`D3: repeatable read`
+
+Reset the stock to 10 in S1 first.
+
+|Step  |Window	|Statement|
+|------|-------|---------|
+|1	|S2	|SET SESSION TRANSACTION ISOLATION LEVEL REPEATABLE READ;|
+|2	|S2	|START TRANSACTION; then SELECT stock_qty ...; (stock count is 10)|
+|3	|S1	|UPDATE products SET stock_qty = 7 WHERE sku='TXN-TEST-1';|
+|4	|S2	|Repeat the SELECT: (quantity still remains 10)|
+|5	|S2	|COMMIT; then SELECT again: now 7|
+
