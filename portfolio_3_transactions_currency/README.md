@@ -8,7 +8,9 @@ This portfolio is divided into 4 parts
 2. Part B: rollback
 3. Part C: Review a concurrency problem, then it's fix
 Scenario: Two customers want to buy 6bags each, but only 10 are in stock.
-4. Part D: Isolation levels.	What one session sees of another’s uncommitted work
+4. Part D: Isolation levels. What one session sees of another’s uncommitted work
+
+#### Part C: Review concurrency problem and its fix
 
 To set up this experiment, I used two Terminal windows (refer to `Part C - Run 1 screenshot`) called S1 & S2
 
